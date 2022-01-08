@@ -52,7 +52,9 @@ EXTERNAL_APPS = [
     'corsheaders',
 ]
 
-INTERNAL_APPS = []
+INTERNAL_APPS = [
+    'user',
+]
 
 INSTALLED_APPS = PRIORITY_APPS + INTERNAL_APPS + EXTERNAL_APPS + DJANGO_APPS
 
@@ -191,4 +193,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CSRF_COOKIE_SECURE = PRODUCTION
 
 # Custom User Model
-# AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.User'

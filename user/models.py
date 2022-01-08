@@ -67,3 +67,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         self.phone_number = self.phone_number.replace('-', '')
         super().save(*args, **kwargs)
+
+
+class AuthToken(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
+                          null=False, blank=False, auto_created=True)
+    user = models.ForeignKey(
+        User, related_name='auth_tokens', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.name} - {self.id}"

@@ -52,7 +52,9 @@ EXTERNAL_APPS = [
     'corsheaders',
 ]
 
-INTERNAL_APPS = []
+INTERNAL_APPS = [
+    'user',
+]
 
 INSTALLED_APPS = PRIORITY_APPS + INTERNAL_APPS + EXTERNAL_APPS + DJANGO_APPS
 
@@ -157,6 +159,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Rest Framework Config
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "config.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+
 # AWS Config
 # AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 # AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -191,4 +202,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CSRF_COOKIE_SECURE = PRODUCTION
 
 # Custom User Model
-# AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.User'

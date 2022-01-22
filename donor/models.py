@@ -22,9 +22,9 @@ class DonorCard(models.Model):
     donorName = models.CharField(max_length=10)
     donorBirth = models.DateField()
     donorPlace = models.CharField(max_length=10)
-    cardId = models.CharField(max_length=10)
+    cardId = models.CharField(max_length=10, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.donorName} - {self.cardId}"

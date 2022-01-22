@@ -124,7 +124,7 @@ class GenerateDonorCard(APIView):
                 'from': settings.ETH_WALLET_ADDRESS,
             })
         gasprice = int(w3.eth.generateGasPrice() * 2)
-        txn = contract.functions.adminTransferFrom(
+        txn = contract.functions.mint(
             card.user.address, int(card.cardId), card.cardImage.url).buildTransaction({
                 'from': settings.ETH_WALLET_ADDRESS,
                 'chainId': 4,

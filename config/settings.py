@@ -180,6 +180,12 @@ CORS_ORIGIN_WHITELIST = (
     'http://125.133.60.213',
 )
 
+# Infura API
+ETH_NETWORK = os.environ.get('ETH_NETWORK', 'ropsten')
+ETH_INFURA_KEY = os.environ.get('ETH_INFURA_KEY', '0')
+ETH_RPC_URL = os.environ.get(
+    'ETH_RPC_URL', f'https://{ETH_NETWORK}.infura.io/v3/{ETH_INFURA_KEY}')
+
 # AWS Config
 # AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 # AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')

@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import user.views as user_views
+import donor.views as donor_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login', user_views.UserLogin.as_view()),
     path('register', user_views.UserRegister.as_view()),
+    path('getDonorCard', donor_views.MyWallet.as_view()),
+    path('getDonorDetail/<str:cardId>', donor_views.DonorCardView.as_view()),
 ]

@@ -34,7 +34,7 @@ class TransferSerializer(serializers.ModelSerializer):
         return 'recieve'
 
     def get_fromUser(self, obj):
-        return obj.name
+        return obj.fromUser.name
 
     def get_toUser(self, obj):
-        return obj.name
+        return obj.toUser.name

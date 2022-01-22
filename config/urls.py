@@ -25,4 +25,6 @@ urlpatterns = [
     path('getDonorCard', donor_views.MyWallet.as_view()),
     path('getDonorDetail/<str:cardId>', donor_views.DonorCardView.as_view()),
     path('getMyAddress', user_views.WalletAddress.as_view()),
+    path('sendDonorCard/<str:cardId>', donor_views.SendDonorCard.as_view()),
+    path('getDeliveryList', donor_views.DeliveryList.as_view()),
 ]

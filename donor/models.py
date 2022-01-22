@@ -28,3 +28,16 @@ class DonorCard(models.Model):
 
     def __str__(self):
         return f"{self.donorName} - {self.cardId}"
+
+
+class Transfer(models.Model):
+    fromUser = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='fromUser')
+    toUser = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='toUser')
+    donorCard = models.ForeignKey(DonorCard, on_delete=models.CASCADE)
+    deliveryDate = models.DateTimeField(auto_now=True)
+    txid = models.CharField(max_length=200, unique=True, null=True)
+
+    def __str__(self):
+        return f"{self.fromUser.name} -> {self.toUser.name} - {self.txid}"

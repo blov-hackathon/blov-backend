@@ -19,6 +19,9 @@ class DonorCardSerializer(serializers.ModelSerializer):
 
 class TransferSerializer(serializers.ModelSerializer):
     deliveryType = serializers.SerializerMethodField()
+    fromUser = serializers.SerializerMethodField()
+    toUser = serializers.SerializerMethodField()
+    donorCard = DonorCardSerializer(read_only=True)
 
     class Meta:
         model = Transfer
@@ -29,3 +32,9 @@ class TransferSerializer(serializers.ModelSerializer):
         if self.context['request'].user == obj.fromUser:
             return 'send'
         return 'recieve'
+
+    def get_fromUser(self, obj):
+        return obj.name
+
+    def get_toUser(self, obj):
+        return obj.name

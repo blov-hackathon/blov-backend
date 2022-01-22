@@ -41,3 +41,13 @@ class UserLogin(APIView):
             return Response({'status': 'success', 'token': token.id})
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={'status': 'fail'})
+
+
+class WalletAddress(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        try:
+            return Response({'status': 'success', 'address': request.user.address})
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)

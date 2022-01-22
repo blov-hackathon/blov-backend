@@ -61,6 +61,7 @@ class SendDonorCard(APIView):
             w3.eth.send_raw_transaction(signed_txn.rawTransaction)
             Transfer.objects.create(
                 fromUser=fromUser, toUser=toUser, donorCard=donorCard, txid=signed_txn.hash.hex())
+            donorCard.save()
             return Response({'status': 'success', 'message': 'DonorCard created successfully', 'txid': signed_txn.hash.hex()}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)

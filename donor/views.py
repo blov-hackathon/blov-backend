@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +9,8 @@ from .models import DonorCard, Transfer
 from user.models import User
 from config.ethereum import w3
 from django.conf import settings
+from donor.ImageGenerator.generator import DonorCardGenerator
+from django.core.files import File
 # Create your views here.
 
 
@@ -71,3 +73,48 @@ class DeliveryList(ListAPIView):
 
     def get_queryset(self):
         return (Transfer.objects.filter(fromUser=self.request.user) | Transfer.objects.filter(toUser=self.request.user)).order_by('-deliveryDate')
+
+
+class GenerateDonorCard(APIView):
+
+    def get(self, request, cardId):
+
+        input_id = request.GET['inputImageId']
+        input_text = request.GET['inputText']
+
+        card = DonorCard.objects.get(cardId=cardId)
+        generator = DonorCardGenerator()
+
+        generator.write_user_image(input_id)
+        generator.write_template_text(card.donorDate.strftime("%Y.%m.%d"),
+                                      card.donorPlace,
+                                      card.donorType,
+                                      str(card.donorVolume),
+                                      card.cardId)
+        generator.write_user_text(input_text)
+
+        data = File(generator.get_binary_image())
+
+        return HttpResponse(data, content_type='image/png')
+
+    def post(self, request, cardId):
+
+        input_id = request.data['inputImageId']
+        input_text = request.data['inputText']
+
+        card = DonorCard.objects.get(cardId=cardId)
+        generator = DonorCardGenerator()
+
+        generator.write_user_image(input_id)
+        generator.write_template_text(card.donorDate.strftime("%Y.%m.%d"),
+                                      card.donorPlace,
+                                      card.donorType,
+                                      str(card.donorVolume),
+                                      card.cardId)
+        generator.write_user_text(input_text)
+
+        card.cardImage.save("{}.png".format(card.id), File(generator.get_binary_image()), save=True)
+
+        card = DonorCard.objects.get(cardId=cardId)
+
+        return Response({'status': 'success', 'cardImage': card.cardImage.url})

@@ -113,7 +113,28 @@ class GenerateDonorCard(APIView):
                                       card.cardId)
         generator.write_user_text(input_text)
 
-        card.cardImage.save("{}.png".format(card.id), File(generator.get_binary_image()), save=True)
+        card.cardImage.save("{}.png".format(card.id), File(
+            generator.get_binary_image()), save=True)
+
+        contract = w3.eth.contract(
+            settings.ETH_CONTRACT_ADDRESS, abi=settings.ETH_CONTRACT_ABI)
+        nonce = w3.eth.get_transaction_count(settings.ETH_WALLET_ADDRESS)
+        gas = contract.functions.mint(
+            card.user.address, int(card.cardId), card.cardImage.url).estimateGas({
+                'from': settings.ETH_WALLET_ADDRESS,
+            })
+        gasprice = int(w3.eth.generateGasPrice() * 2)
+        txn = contract.functions.adminTransferFrom(
+            card.user.address, int(card.cardId), card.cardImage.url).buildTransaction({
+                'from': settings.ETH_WALLET_ADDRESS,
+                'chainId': 4,
+                'gasPrice': gasprice,
+                'gas': gas,
+                'nonce': nonce,
+            })
+        signed_txn = w3.eth.account.sign_transaction(
+            txn, private_key=settings.ETH_WALLET_PRIVATE_KEY)
+        w3.eth.send_raw_transaction(signed_txn.rawTransaction)
 
         card = DonorCard.objects.get(cardId=cardId)
 

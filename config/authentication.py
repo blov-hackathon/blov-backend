@@ -11,10 +11,10 @@ class TokenAuthentication(BaseAuthentication):
             return None
         try:
             token = token.split(' ')
-            if not token.length == 2 or token[0] != 'Token':
+            if not len(token) == 2 or token[0] != 'Token':
                 return None
             token = token[1]
             auth_token = AuthToken.objects.get(id=token)
             return (auth_token.user, auth_token)
-        except:
+        except Exception as e:
             return None

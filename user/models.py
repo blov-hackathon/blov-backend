@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 import uuid
+from config.ethereum import create_wallet
 
 
 class UserManager(BaseUserManager):
@@ -12,15 +13,17 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def create_user(self, phone_number, name, blood_type, password):
+        wallet = create_wallet()
         user = self.model(phone_number=phone_number,
-                          name=name, blood_type=blood_type)
+                          name=name, blood_type=blood_type, private_key=wallet.privateKey.hex(), address=wallet.address)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, phone_number, name, blood_type, password):
+        wallet = create_wallet()
         user = self.model(phone_number=phone_number,
-                          name=name, blood_type=blood_type)
+                          name=name, blood_type=blood_type, private_key=wallet.privateKey.hex(), address=wallet.address)
         user.set_password(password)
         user.is_superuser = True
         user.is_admin = True
@@ -57,6 +60,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
+    private_key = models.CharField(max_length=200, unique=True, null=True)
+    address = models.CharField(max_length=200, unique=True, null=True)
 
     REQUIRED_FIELDS = ['blood_type', 'name']
     USERNAME_FIELD = 'phone_number'

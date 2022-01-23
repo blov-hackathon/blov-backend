@@ -25,8 +25,8 @@ class UserRegister(CreateAPIView):
                 request.data['phone_number'], request.data['name'], request.data['blood_type'], request.data['password'])
             user.save()
             # generate random 6 digit number
-            DonorCard.objects.create(user=user, donorDate=datetime.now(), donorType="회원가입축하", donorVolume=0, donorName=user.name,
-                                     donorBirth=datetime(2000, 1, 1), donorPlace="BLOV TEAM", cardId=f"1000{str(datetime.now().timestamp()).split('.')[1]}")
+            DonorCard.objects.create(user=user, donorDate=datetime.now(), donorType="전혈", donorVolume=320, donorName=user.name,
+                                     donorBirth=datetime(2000, 1, 1), donorPlace="인천인하혈액원", cardId=f"1000{str(datetime.now().timestamp()).split('.')[1]}")
             token = AuthToken.objects.create(user=user)
             return Response({'status': 'success', 'message': 'User created successfully', 'token': token.id}, status=status.HTTP_201_CREATED)
         except Exception as e:
